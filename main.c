@@ -9,6 +9,7 @@ typedef struct {
     char* src;
     char* start;
     char* end;
+    short verbose;
 } args_t;
 
 typedef struct {
@@ -30,6 +31,8 @@ args_t process_args(int argc, char* argv[]) {
         } else if (strcmp(argv[i], "--end") == 0 && i + 1 < argc) {
             args.end = argv[i + 1];
             i++;
+        } else if (strcmp(argv[i], "--verbose") == 0) {
+            args.verbose = 1;
         } else {
             fprintf(stderr, "Unknown argument: %s\n", argv[i]);
             exit(EXIT_FAILURE);
@@ -77,6 +80,8 @@ void download_pdf(char* url, args_t args) {
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
     CURLcode res = curl_easy_perform(curl);
+
+    if (args.verbose) printf("Downloading from: %s to %s\n", url, filepath);
 
     if (res != CURLE_OK) {
         fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
@@ -135,7 +140,7 @@ void parse_html_and_download_pdfs(char* html, args_t args, char* root_url) {
         char* pdf_url_copy = malloc(strlen(root_url) + strlen(pdf_url) + 1);
         sprintf(pdf_url_copy, "%s%s", root_url, pdf_url);
 
-        char* tok = strtok(pdf_url, "_");
+        char* tok = strtok(pdf_url, "/");
         char* year = NULL;
         char* month = NULL;
         char* temp = NULL;
@@ -143,8 +148,12 @@ void parse_html_and_download_pdfs(char* html, args_t args, char* root_url) {
             year = month;
             month = temp;
             temp = tok;
-            tok = strtok(NULL, "_");
+            tok = strtok(NULL, "/");
         }
+
+        if (strlen(year) == 5) year = "2009"; // this is solely a Scînteia specific thing,
+        //                                       in 2009, the Jurnalul României paper was
+        //                                       including issues of Scînteia from 20 years back
         char* date = malloc(strlen(year) + strlen(month) + 2);
         sprintf(date, "%s/%s", year, month);
 
