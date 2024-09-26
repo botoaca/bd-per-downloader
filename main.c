@@ -5,17 +5,32 @@
 #include <sys/stat.h>
 #include <curl/curl.h>
 
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
+
 typedef struct {
     char* src;
     char* start;
     char* end;
     short verbose;
+    int wait;
 } args_t;
 
 typedef struct {
     char* response;
     size_t size;
 } memory_t;
+
+void __wait__(int seconds) {
+#ifdef _WIN32
+    Sleep(seconds * 1000);
+#else
+    sleep(seconds);
+#endif
+}
 
 args_t process_args(int argc, char* argv[]) {
     args_t args = { NULL, NULL };
@@ -33,6 +48,9 @@ args_t process_args(int argc, char* argv[]) {
             i++;
         } else if (strcmp(argv[i], "--verbose") == 0) {
             args.verbose = 1;
+        } else if (strcmp(argv[i], "--wait") == 0 && i + 1 < argc) {
+            args.wait = atoi(argv[i + 1]);
+            i++;
         } else {
             fprintf(stderr, "Unknown argument: %s\n", argv[i]);
             exit(EXIT_FAILURE);
@@ -157,7 +175,10 @@ void parse_html_and_download_pdfs(char* html, args_t args, char* root_url) {
         char* date = malloc(strlen(year) + strlen(month) + 2);
         sprintf(date, "%s/%s", year, month);
 
-        if (is_in_range(args.start, args.end, date)) download_pdf(pdf_url_copy, args);
+        if (is_in_range(args.start, args.end, date)) {
+            download_pdf(pdf_url_copy, args);
+            if (args.wait) __wait__(args.wait);
+        }   
 
         p += match[0].rm_eo;
     }

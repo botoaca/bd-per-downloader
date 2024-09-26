@@ -8,6 +8,7 @@ this utility was build to help mass-download files from the periodical section o
 | --start (optional) | The start of the time period you wish to download from (YYYY/MM) |
 | --end | The end of the time period you wish to download from (YYYY/MM) |
 | --verbose | Prints which files are being downloaded |
+| --wait | Lets you wait for *x* seconds to avoid rate limits |
 
 if you only wish to download one month of issues, you can omit the --start argument altogether and set the --end argument to the date of the one that should be downloaded\
 *examples*:
@@ -15,6 +16,7 @@ if you only wish to download one month of issues, you can omit the --start argum
 ./bd-per-downloader --src scanteia --start 1968/05 --end 1968/06 (will download every issue from may to june 1968)
 ./bd-per-downloader --src scanteiatin --end 1954/01 (will download every issue from january 1954)
 ./bd-per-downloader --src albina --start 0/0 --end 9999/9999 --verbose > log.txt (will download every single issue and save a log)
+./bd-per-downloader --src femeia --start 0/0 --end 9999/9999 --wait 5 (will download every single issue, one every 5 seconds)
 ```
 
 ### Where do I get the publication source source?
