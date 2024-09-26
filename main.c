@@ -91,6 +91,8 @@ void download_pdf(char* url, args_t args) {
 
     if (file == NULL) {
         fprintf(stderr, "Failed to open file\n");
+        free(filepath);
+        curl_easy_cleanup(curl);
         exit(EXIT_FAILURE);
     }
 
@@ -106,6 +108,8 @@ void download_pdf(char* url, args_t args) {
         exit(EXIT_FAILURE);
     }
 
+    fclose(file);
+    free(filepath);
     curl_easy_cleanup(curl);
 }
 

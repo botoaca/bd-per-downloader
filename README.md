@@ -8,7 +8,7 @@ this utility was build to help mass-download files from the periodical section o
 | --start (optional) | The start of the time period you wish to download from (YYYY/MM) |
 | --end | The end of the time period you wish to download from (YYYY/MM) |
 | --verbose | Prints which files are being downloaded |
-| --wait | Lets you wait for *x* seconds to avoid rate limits |
+| --wait | Lets you wait for *x* seconds to avoid overloading the server |
 
 if you only wish to download one month of issues, you can omit the --start argument altogether and set the --end argument to the date of the one that should be downloaded\
 *examples*:
