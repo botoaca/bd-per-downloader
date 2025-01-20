@@ -1,5 +1,5 @@
 # Biblioteca Deva Periodice Downloader
-this utility was build to help mass-download files from the periodical section of the B.J.O.D.HD digital library.
+this utility was built to help mass-download files from the periodical section of the B.J.O.D.HD digital library.
 
 ## Usage
 | Command-line argument | Purpose |
